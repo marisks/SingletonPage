@@ -15,8 +15,8 @@ namespace Marisks.SingletonPage
 
         public ContentReference GetOrAdd(CacheKey key, Func<ContentReference> valueFactory)
         {
-            Func<CacheKey, ContentReference> adapterFactory = _ => valueFactory();
-            return Cache.GetOrAdd(key, adapterFactory);
+            var value = valueFactory();
+            return value == ContentReference.EmptyReference ? value : Cache.GetOrAdd(key, value);
         }
     }
 }

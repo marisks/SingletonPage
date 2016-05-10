@@ -148,7 +148,20 @@ namespace Marisks.SingletonPage.Tests
             Assert.Equal(secondSingleton.Page.ContentLink, secondActual.ContentLink);
         }
 
-        //todo: implement checking for empty reference
+        [Fact]
+        public void it_does_not_add_empty_content_link_to_the_cache()
+        {
+            var fakeRoot = FakePage.Create("Root");
+            var fakeStart = FakePage.Create("Start")
+                                    .ChildOf(fakeRoot);
+            _fake.AddToRepository(fakeRoot);
+
+            fakeStart.Page.PageLink.GetSingletonPage<TestPage>();
+
+            var key = new CacheKey(typeof(TestPage), fakeStart.Page.PageLink);
+            var actual = _fakeCache.InternalCache.ContainsKey(key);
+            Assert.False(actual);
+        }
 
         public IEnumerable<FakePage> RandomPages(int count)
         {
